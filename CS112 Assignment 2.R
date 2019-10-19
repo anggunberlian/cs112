@@ -344,16 +344,18 @@ mean((foo.test_set$treat - predict(model_5, foo.test_set, type = "response"))^2)
 
 # Classification Problem + Confusion Matrix
 
-model_1 <- glm(treat ~ . - re78, data = foo.train_set_here1, family = binomial)
+foo.train_set_rows1 <- sample(1:length(foo.train_set$age), 2000, replace = FALSE)
+foo.train_set_here2 <- foo.train_set[foo.train_set_rows1, ]
+
+model_1 <- glm(treat ~ . - re78, data = foo.train_set_here2, family = binomial)
 predicted_probs.1 <- predict(model_1)
 predicted_ys.1 <- rep(0, length(predicted_probs.1))
 predicted_ys.1[predicted_probs.1 > 0.5] <- 1
 
-table(predicted_ys.1, foo.train_set_here1$treat)
+table(predicted_ys.1, foo.train_set_here2$treat)
 
-new.predicted_probs.1 <- predict.glm(model_1, foo.train_set, type = "response")
+new.predicted_probs.1 <- predict.glm(model_1, foo.test_set, type = "response")
 predicted_yn.1 <- rep(0, length(new.predicted_probs.1))
 predicted_yn.1[new.predicted_probs.1 > 0.5] <- 1
 
-table(predicted_yn.1, foo.train_set$treat)
-
+table(predicted_yn.1, foo.test_set$treat)
