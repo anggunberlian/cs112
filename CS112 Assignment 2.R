@@ -348,10 +348,9 @@ foo.train_set_rows1 <- sample(1:length(foo.train_set$age), 2000, replace = FALSE
 foo.train_set_here2 <- foo.train_set[foo.train_set_rows1, ]
 
 model_1 <- glm(treat ~ . - re78, data = foo.train_set_here2, family = binomial)
-predicted_probs.1 <- predict(model_1)
+predicted_probs.1 <- predict(model_1, type = "response")
 predicted_ys.1 <- rep(0, length(predicted_probs.1))
 predicted_ys.1[predicted_probs.1 > 0.5] <- 1
-
 table(predicted_ys.1, foo.train_set_here2$treat)
 
 new.predicted_probs.1 <- predict.glm(model_1, foo.test_set, type = "response")

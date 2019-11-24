@@ -59,3 +59,36 @@ foo[4043, ]
 y <- as.numeric((new_foo$RevisedCompletionDate - new_foo$ApprovalDate) / 30) # the delays in month
 x <- new_foo$CirculationDate
 plot(x, y, xlab = "Circulation date (year)", ylab = "Average delay (months)")
+
+
+# Question 5 with all the training set
+model_1_all <- glm(treat ~ . - re78, data = foo.train_set, family = binomial)
+model_2_all <- glm(treat ~ age + education + hispanic + re75 - re78, data = foo.train_set, family = binomial)
+model_3_all <- glm(treat ~ age + education + hispanic + married - re78, data = foo.train_set, family = binomial)
+model_4_all <- glm(treat ~ age + education + black + re74 + re75 - re78, data = foo.train_set, family = binomial)
+model_5_all <- glm(treat ~ age + education + black + married - re78, data = foo.train_set, family = binomial)
+
+
+cv.err_1_all <- cv.glm(foo.train_set, model_1_all) 
+cv.err_2_all <- cv.glm(foo.train_set, model_2_all)
+cv.err_3_all <- cv.glm(foo.train_set, model_3_all)
+cv.err_4_all <- cv.glm(foo.train_set, model_4_all)
+cv.err_5_all <- cv.glm(foo.train_set, model_5_all)
+
+
+# Test set error for the train set 
+
+cv.err_1_all$delta
+cv.err_2_all$delta
+cv.err_3_all$delta
+cv.err_4_all$delta
+cv.err_5_all$delta
+
+# Test set error for the test set
+
+mean((foo.test_set$treat - predict(model_1_all, foo.test_set, type = "response"))^2)
+mean((foo.test_set$treat - predict(model_2_all, foo.test_set, type = "response"))^2)
+mean((foo.test_set$treat - predict(model_3_all, foo.test_set, type = "response"))^2)
+mean((foo.test_set$treat - predict(model_4_all, foo.test_set, type = "response"))^2)
+mean((foo.test_set$treat - predict(model_5_all, foo.test_set, type = "response"))^2)
+
